@@ -12,7 +12,6 @@ class OpinionController extends Controller
      */
     public function index()
     {
-        // Busca todas las opiniones en la base de datos y las devuelve como JSON
         $opinions = Opinion::all();
         return response()->json($opinions);
     }
@@ -22,7 +21,6 @@ class OpinionController extends Controller
      */
     public function store(Request $request)
     {
-        // Valida los datos de entrada
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'review' => 'required|string',
@@ -34,10 +32,50 @@ class OpinionController extends Controller
             'etiquetado_manual' => 'sometimes|boolean',
         ]);
 
-        // Crea la nueva opinión con los datos validados
         $opinion = Opinion::create($validatedData);
 
-        // Devuelve la opinión creada con un código de estado 201 (Created)
         return response()->json($opinion, 201);
+    }
+
+    /**
+     * Muestra una opinión específica.
+     */
+    public function show(string $id)
+    {
+        $opinion = Opinion::findOrFail($id);
+        return response()->json($opinion);
+    }
+
+    /**
+     * Actualiza una opinión específica.
+     */
+    public function update(Request $request, string $id)
+    {
+        $opinion = Opinion::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'title' => 'sometimes|string|max:255',
+            'review' => 'sometimes|string',
+            'polarity' => 'sometimes|integer|between:1,5',
+            'town' => 'sometimes|string|max:100',
+            'region' => 'sometimes|string|max:100',
+            'type' => 'sometimes|string|in:Hotel,Restaurant,Attractive',
+            'usuario' => 'sometimes|string|max:100',
+        ]);
+
+        $opinion->update($validatedData);
+
+        return response()->json($opinion);
+    }
+
+    /**
+     * Elimina una opinión específica.
+     */
+    public function destroy(string $id)
+    {
+        $opinion = Opinion::findOrFail($id);
+        $opinion->delete();
+
+        return response()->json(null, 204); // 204 No Content
     }
 }

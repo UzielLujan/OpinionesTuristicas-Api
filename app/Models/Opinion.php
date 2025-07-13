@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Jenssegers\Mongodb\Eloquent\Model; //Usa el modelo de MongoDB
-
+use MongoDB\Laravel\Eloquent\Model;
 class Opinion extends Model
 {
     use HasFactory;
