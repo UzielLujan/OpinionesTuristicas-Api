@@ -1,6 +1,7 @@
 services:
   - type: web
     name: opiniones-turisticas-api
+    plan: free 
     env: docker
     dockerfilePath: ./Dockerfile.render
     healthCheckPath: /api/health
