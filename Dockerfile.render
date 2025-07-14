@@ -47,7 +47,7 @@ COPY --from=vendor /var/www/html .
 
 # Copia las configuraciones de Nginx y Supervisor
 COPY ./docker/nginx/default.conf /etc/nginx/sites-available/default
-COPY ./docker/supervisor.conf /etc/supervisor/conf.d/laravel.conf
+COPY ./docker/supervisor.conf /etc/supervisor/supervisord.conf
 
 # Expone el puerto 80 para Nginx
 EXPOSE 80
