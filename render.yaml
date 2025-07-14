@@ -2,7 +2,7 @@ services:
   - type: web
     name: opiniones-turisticas-api
     env: docker
-    dockerfilePath: ./Dockerfile.render # Usa el nuevo Dockerfile
+    dockerfilePath: ./Dockerfile.render
     healthCheckPath: /api/health
     envVars:
       - key: APP_URL
@@ -12,8 +12,4 @@ services:
       - key: DB_CONNECTION
         value: mongodb
       - key: DB_URI
-        sync: false # Lo configuraremos manualmente
-    disk:
-      name: laravel-storage
-      mountPath: /var/www/html/storage
-      sizeGB: 1
+        sync: false # Remember to set this in the Render dashboard
