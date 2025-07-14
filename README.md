@@ -1,60 +1,94 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# API de Opiniones Turísticas
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este proyecto es un backend construido con Laravel que proporciona una API RESTful para gestionar reseñas de destinos turísticos en México, simulando un sistema de recolección de datos para un corpus de análisis de sentimientos.
 
-## About Laravel
+El proyecto está completamente contenedorizado con Docker para un fácil despliegue y portabilidad.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Características Principales
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   Backend moderno y modular con **Laravel 12**.
+-   API RESTful con endpoints **CRUD** (Crear, Leer, Actualizar, Eliminar) para gestionar opiniones.
+-   Base de datos NoSQL en la nube con **MongoDB Atlas**.
+-   Entorno de desarrollo local consistente y aislado con **Docker**.
+-   Exportación de datos a formato **CSV**.
+-   Una interfaz visual simple para demostración y pruebas.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Stack Tecnológico
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   **Backend:** PHP 8.2+, Laravel 12
+-   **Base de Datos:** MongoDB Atlas
+-   **Contenerización:** Docker / Docker Compose
+-   **Servidor Web:** Nginx
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Cómo Levantar el Entorno Local
 
-## Laravel Sponsors
+Sigue estos pasos para ejecutar el proyecto en tu máquina local.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Prerrequisitos
 
-### Premium Partners
+-   Tener [Docker](https://www.docker.com/products/docker-desktop/) instalado y en ejecución.
+-   En Windows, se recomienda usar [WSL2](https://learn.microsoft.com/es-es/windows/wsl/install).
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Pasos de Instalación
 
-## Contributing
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone [https://github.com/UzielLujan/OpinionesTuristicas-Api.git](https://github.com/UzielLujan/OpinionesTuristicas-Api.git)
+    cd OpinionesTuristicas-Api
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2.  **Crear el archivo de entorno:**
+    Copia el archivo de ejemplo `.env.example` para crear tu propio archivo de configuración.
+    ```bash
+    cp .env.example .env
+    ```
 
-## Code of Conduct
+3.  **Configurar la base de datos:**
+    Abre el archivo `.env` y añade tu cadena de conexión de MongoDB Atlas en la variable `DB_URI`.
+    ```
+    DB_CONNECTION=mongodb
+    DB_URI="TU_CADENA_DE_CONEXION_A_MONGODB_ATLAS"
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4.  **Construir y levantar los contenedores:**
+    Este comando construirá las imágenes de Docker y pondrá en marcha la aplicación en segundo plano.
+    ```bash
+    docker compose up -d --build
+    ```
 
-## Security Vulnerabilities
+5.  **Generar la clave de la aplicación:**
+    ```bash
+    docker compose exec app php artisan key:generate
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+6.  **Ejecutar las migraciones:**
+    Esto creará la colección `opinions` en tu base de datos.
+    ```bash
+    docker compose exec app php artisan migrate
+    ```
+
+¡Y listo! La aplicación estará disponible en `http://localhost:8080`.
+
+---
+
+## Endpoints de la API
+
+La URL base de la API es `http://localhost:8080/api`.
+
+| Método | Ruta                     | Descripción                               |
+| :----- | :----------------------- | :---------------------------------------- |
+| `GET`  | `/opinions`              | Obtiene una lista de todas las opiniones. |
+| `POST` | `/opinions`              | Crea una nueva opinión.                   |
+| `GET`  | `/opinions/{id}`         | Muestra una opinión específica.           |
+| `PUT`  | `/opinions/{id}`         | Actualiza una opinión específica.         |
+| `DELETE`| `/opinions/{id}`         | Elimina una opinión específica.           |
+| `GET`  | `/opinions/export`       | Descarga todas las opiniones como un archivo CSV. |
+
+Para facilitar las pruebas, puedes importar la colección de Postman (`Opiniones_Turisticas_API.postman_collection.json`) incluida en este repositorio.
 
 ## License
 

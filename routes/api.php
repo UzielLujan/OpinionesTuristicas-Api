@@ -14,5 +14,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Exporta las reseñas a un archivo CSV
+
+Route::get('opinions/export', [OpinionController::class, 'export']);
+
 // Crea automáticamente las rutas CRUD para nuestras opiniones
 Route::apiResource('opinions', OpinionController::class);

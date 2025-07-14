@@ -78,4 +78,56 @@ class OpinionController extends Controller
 
         return response()->json(null, 204); // 204 No Content
     }
+
+    /**
+     * Exporta todas las opiniones a un archivo CSV.
+     */
+    public function export()
+    {
+        $opinions = Opinion::all();
+        $fileName = 'opiniones_turisticas.csv';
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = ['ID', 'Title', 'Review', 'Polarity', 'Town', 'Region', 'Type', 'Usuario', 'Created At'];
+
+        $callback = function() use($opinions, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($opinions as $opinion) {
+                $row['ID']         = $opinion->id;
+                $row['Title']      = $opinion->title;
+                $row['Review']     = $opinion->review;
+                $row['Polarity']   = $opinion->polarity;
+                $row['Town']       = $opinion->town;
+                $row['Region']     = $opinion->region;
+                $row['Type']       = $opinion->type;
+                $row['Usuario']    = $opinion->usuario;
+                $row['Created At'] = $opinion->created_at;
+
+                fputcsv($file, [
+                    $row['ID'], 
+                    $row['Title'], 
+                    $row['Review'], 
+                    $row['Polarity'], 
+                    $row['Town'], 
+                    $row['Region'], 
+                    $row['Type'], 
+                    $row['Usuario'], 
+                    $row['Created At']
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }
