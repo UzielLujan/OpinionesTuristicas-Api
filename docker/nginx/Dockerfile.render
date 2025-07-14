@@ -1,0 +1,7 @@
+FROM nginx:alpine
+
+# Copia nuestro archivo de configuración personalizado
+COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Un pequeño truco para que Nginx use variables de entorno
+CMD ["/bin/sh", "-c", "envsubst < /etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]

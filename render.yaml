@@ -1,0 +1,49 @@
+services:
+  # Servicio para la aplicación Laravel/PHP
+  - type: web
+    name: opiniones-api-app
+    env: docker
+    dockerfilePath: ./docker/Dockerfile
+    # Propiedades para el disco persistente (storage de Laravel)
+    disk:
+      name: laravel-storage
+      mountPath: /var/www/html/storage
+      sizeGB: 1
+    # Variables de entorno
+    envVars:
+      - key: APP_URL
+        value: https://${RENDER_EXTERNAL_URL}
+      - key: APP_KEY
+        fromService:
+          type: web
+          name: opiniones-api-app
+          envVarKey: GENERATED_APP_KEY
+      - key: DB_CONNECTION
+        value: mongodb
+      - key: DB_URI
+        fromService:
+          type: web
+          name: opiniones-api-app
+          envVarKey: DB_URI_SECRET
+      - key: SESSION_DRIVER
+        value: file
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+
+  # Servicio para el servidor web Nginx
+  - type: web
+    name: opiniones-api-nginx
+    env: docker
+    dockerContext: .
+    dockerfilePath: ./docker/nginx/Dockerfile.render 
+    # Propiedades del servicio HTTP
+    http:
+      port: 80
+    envVars:
+      - key: NGINX_BACKEND_HOST
+        fromService:
+          type: web
+          name: opiniones-api-app
+          property: host

@@ -1,7 +1,7 @@
 # API de Opiniones Turísticas
 
-Este proyecto es un backend construido con Laravel que proporciona una API RESTful para gestionar reseñas de destinos turísticos en México, simulando un sistema de recolección de datos para un corpus de análisis de sentimientos.
-
+Este proyecto es un backend construido con Laravel que proporciona una API RESTful para gestionar, recolectar y etiquetar estructuradamente opiniones-reseñas turísticas de destinos turísticos en México, simulando un sistema de recolección de datos para un corpus de análisis de sentimientos.
+Este proyecto está inspirado en el corpus REST-MEX, esta aplicación simula el proceso de construcción de datasets de texto para modelos de Procesamiento de Lenguaje Natural (NLP) de análisis de sentimiento, implementada con Laravel, MongoDB Atlas y Docker.
 El proyecto está completamente contenedorizado con Docker para un fácil despliegue y portabilidad.
 
 ## Características Principales
