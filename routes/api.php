@@ -20,3 +20,6 @@ Route::get('opinions/export', [OpinionController::class, 'export']);
 
 // Crea automáticamente las rutas CRUD para nuestras opiniones
 Route::apiResource('opinions', OpinionController::class);
+
+// Ruta para el Health Check de Render
+Route::get('/health', fn () => response()->json(['status' => 'ok']));
