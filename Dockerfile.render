@@ -1,0 +1,59 @@
+# Etapa 1: Instalar dependencias de PHP y la aplicación
+FROM php:8.2-fpm as vendor
+
+# Instala dependencias del sistema, incluyendo nginx y supervisor
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    zip \
+    libzip-dev \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    libssl-dev \
+    nginx \
+    supervisor
+
+# Instala la extensión de MongoDB
+RUN pecl install mongodb && docker-php-ext-enable mongodb
+
+# Instala Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+# Copia los archivos de la aplicación y instala dependencias
+COPY . .
+RUN composer install --no-dev --optimize-autoloader
+
+# Etapa 2: Crear la imagen final de producción
+FROM php:8.2-fpm
+
+# Instala solo las dependencias de sistema necesarias
+RUN apt-get update && apt-get install -y \
+    nginx \
+    supervisor \
+    libzip-dev \
+    libpng-dev
+
+# Habilita las extensiones de PHP
+RUN docker-php-ext-install zip exif pcntl gd
+RUN pecl install mongodb && docker-php-ext-enable mongodb
+
+WORKDIR /var/www/html
+
+# Copia los archivos de la aplicación desde la etapa anterior
+COPY --from=vendor /var/www/html .
+
+# Copia las configuraciones de Nginx y Supervisor
+COPY ./docker/nginx/default.conf /etc/nginx/sites-available/default
+COPY ./docker/supervisor.conf /etc/supervisor/conf.d/laravel.conf
+
+# Expone el puerto 80 para Nginx
+EXPOSE 80
+
+# Script de inicio
+COPY ./docker/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+CMD ["/usr/local/bin/start.sh"]

@@ -1,50 +1,19 @@
-# render.yaml - Versión Corregida
-version: "1"
-
 services:
-  # Servicio de la aplicación Laravel (privado)
-  - type: pserv # 'pserv' significa Private Service
-    name: opiniones-api-app
+  - type: web
+    name: opiniones-turisticas-api
     env: docker
-    dockerfilePath: ./docker/Dockerfile
-    # Disco persistente para el storage de Laravel
-    disk:
-      name: laravel-storage
-      mountPath: /var/www/html/storage
-      sizeGB: 1
-    # Health Check para saber si la app está lista
-    healthCheckPath: /api/health # Necesitaremos crear esta ruta
+    dockerfilePath: ./Dockerfile.render # Usa el nuevo Dockerfile
+    healthCheckPath: /api/health
     envVars:
       - key: APP_URL
         value: https://${RENDER_EXTERNAL_URL}
       - key: APP_KEY
-        generateValue: true # Render generará y gestionará la clave
+        generateValue: true
       - key: DB_CONNECTION
         value: mongodb
       - key: DB_URI
-        fromApp:
-          name: opiniones-api-app
-          envVarKey: DB_URI_SECRET # La configuraremos en el panel
-      - key: SESSION_DRIVER
-        value: file
-      - key: CACHE_STORE
-        value: file
-      - key: QUEUE_CONNECTION
-        value: sync
-
-  # Servicio del servidor web Nginx (público)
-  - type: web
-    name: opiniones-api-nginx
-    env: docker
-    dockerfilePath: ./docker/nginx/Dockerfile.render
-    # Propiedades del servicio HTTP público
-    http:
-      port: 80
-    envVars:
-      - key: NGINX_BACKEND_HOST
-        fromService:
-          type: pserv
-          name: opiniones-api-app
-          property: host
-      - key: PORT
-        value: 80
+        sync: false # Lo configuraremos manualmente
+    disk:
+      name: laravel-storage
+      mountPath: /var/www/html/storage
+      sizeGB: 1
