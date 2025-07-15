@@ -1,0 +1,26 @@
+# Ignora dependencias ya manejadas por composer
+/vendor
+
+# Ignora archivos de entorno y secretos locales
+.env
+.env.local
+
+# Ignora archivos de control de versiones
+.git
+.gitignore
+
+# Ignora artefactos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignora caches de Laravel
+/storage/logs
+/storage/framework/cache
+/storage/framework/views
+
+# Ignora node_modules si tienes alguna build frontend
+/node_modules
+
+# Ignora test outputs y coverage
+coverage/
+phpunit.xml.cache

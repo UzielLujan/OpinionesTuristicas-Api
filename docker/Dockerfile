@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-enable mongodb \
     && docker-php-ext-install pdo pdo_mysql zip gd
 
-
 # Copia Composer desde imagen oficial
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -17,20 +16,24 @@ WORKDIR /var/www/html
 # Copia solo los archivos de Composer para aprovechar la cache
 COPY composer.json composer.lock ./
 
-# Instala dependencias PHP con Composer
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+# Instala dependencias sin que falle por falta de artisan
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader || true
 
-# Ahora sí, copia el resto del código fuente
+# Copia el resto del código fuente (incluye artisan, rutas, etc.)
 COPY . .
 
-# Asegura permisos necesarios para Laravel
+# Reinstala composer (ahora con artisan presente)
+RUN composer dump-autoload --optimize && composer install --no-interaction --prefer-dist --optimize-autoloader
+
+# Ajusta permisos para Laravel
 RUN chmod -R 775 storage bootstrap/cache
 
-# Expone el puerto que usará el servidor interno de Laravel
+# Expone el puerto del servidor embebido
 EXPOSE 8000
 
-# Comando para servir la app
+# Comando para iniciar Laravel en modo dev
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+
 
 
 
