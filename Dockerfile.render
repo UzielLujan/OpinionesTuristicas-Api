@@ -1,23 +1,17 @@
-FROM php:8.2-fpm
-RUN apt-get update && apt-get install -y git unzip zip libzip-dev libpng-dev libssl-dev nginx supervisor
-RUN docker-php-ext-install zip exif pcntl gd
+# Usamos una imagen pre-configurada para producción que incluye PHP, Nginx y Supervisor
+FROM thecodingmachine/php:8.2-v4-nginx-node20
+
+# Habilita las extensiones de PHP que necesitamos
+RUN docker-php-ext-enable zip exif pcntl gd
+
+# Instala la extensión de MongoDB
 RUN pecl install mongodb && docker-php-ext-enable mongodb
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN mkdir -p /var/run/php
-WORKDIR /var/www/html
-COPY . .
+
+# Copia tu código de la aplicación
+COPY . /var/www/html
+
+# Instala las dependencias de Composer
 RUN composer install --no-dev --optimize-autoloader
 
-# --- LÍNEA CLAVE: DA PERMISOS A www-data ---
-RUN chown -R www-data:www-data /var/www/html
-
-# Copia las configuraciones finales
+# Copia tu configuración personalizada de Nginx
 COPY ./docker/nginx/default.conf /etc/nginx/sites-available/default
-COPY ./docker/supervisor.conf /etc/supervisor/supervisord.conf
-COPY ./docker/www.conf /usr/local/etc/php-fpm.d/www.conf
-
-EXPOSE 80
-COPY ./docker/start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
-
-CMD ["/usr/local/bin/start.sh"]
