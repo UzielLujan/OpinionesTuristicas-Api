@@ -3,7 +3,10 @@ FROM php:8.2
 # Instala extensiones necesarias
 RUN apt-get update && apt-get install -y \
     git unzip zip libzip-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb \
     && docker-php-ext-install pdo pdo_mysql zip gd
+
 
 # Copia Composer desde imagen oficial
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
