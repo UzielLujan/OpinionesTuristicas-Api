@@ -23,7 +23,8 @@ RUN pecl install mongodb && docker-php-ext-enable mongodb
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN useradd -G www-data,root -u $uid -d /home/$user $user
+# Cambiar esta línea para solo crear usuario si no existe:
+RUN id -u $user &>/dev/null || useradd -G www-data,root -u $uid -d /home/$user $user
 
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
@@ -34,5 +35,6 @@ COPY . .
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 CMD php artisan serve --host=0.0.0.0 --port=8000
+
 
 
