@@ -1,34 +1,15 @@
-# Usamos una sola etapa para simplificar y asegurar que las extensiones estén presentes
 FROM php:8.2-fpm
-
-# Instala todas las dependencias del sistema necesarias
-RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    zip \
-    libzip-dev \
-    libpng-dev \
-    libssl-dev \
-    nginx \
-    supervisor
-
-# Habilita las extensiones de PHP ANTES de Composer
+RUN apt-get update && apt-get install -y git unzip zip libzip-dev libpng-dev libssl-dev nginx supervisor
 RUN docker-php-ext-install zip exif pcntl gd
 RUN pecl install mongodb && docker-php-ext-enable mongodb
-
-# Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Crea el directorio para el socket de PHP
 RUN mkdir -p /var/run/php
-
 WORKDIR /var/www/html
-
-# Copia los archivos de la aplicación
 COPY . .
-
-# Ejecuta Composer install AHORA que todo está listo
 RUN composer install --no-dev --optimize-autoloader
+
+# --- LÍNEA CLAVE: DA PERMISOS A www-data ---
+RUN chown -R www-data:www-data /var/www/html
 
 # Copia las configuraciones finales
 COPY ./docker/nginx/default.conf /etc/nginx/sites-available/default
