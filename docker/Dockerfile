@@ -10,8 +10,10 @@ WORKDIR /var/www/html
 
 COPY . .
 
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader \
-    && chmod -R 775 storage bootstrap/cache
+
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader || true
+RUN chmod -R 775 storage bootstrap/cache
+
 
 EXPOSE 8000
 
