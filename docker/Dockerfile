@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     locales \
     jpegoptim optipng pngquant gifsicle \
+    libonig-dev \
+    libxml2-dev \
+    && docker-php-ext-install pdo pdo_mysql mbstring fileinfo xml \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-install pdo_mysql zip exif pcntl
