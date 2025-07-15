@@ -37,6 +37,7 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 EXPOSE 80
 
+RUN chmod -R 775 storage bootstrap/cache
 
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
 

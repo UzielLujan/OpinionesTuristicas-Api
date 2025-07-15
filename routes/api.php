@@ -22,4 +22,12 @@ Route::get('opinions/export', [OpinionController::class, 'export']);
 Route::apiResource('opinions', OpinionController::class);
 
 // Ruta para el Health Check de Render
-Route::get('/health', fn () => response()->json(['status' => 'ok']));
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'OK',
+        'app_key' => config('app.key') ? 'set' : 'missing',
+        'debug' => config('app.debug'),
+        'db' => config('database.default'),
+        'mongo_uri' => env('DB_URI'),
+    ]);
+});
