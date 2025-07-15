@@ -1,48 +1,22 @@
-FROM php:8.2-fpm
-
-ARG user=www-data
-ARG uid=1000
+FROM php:8.2
 
 RUN apt-get update && apt-get install -y \
-    git \
-    libssl-dev \
-    unzip \
-    zip \
-    libzip-dev \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    locales \
-    jpegoptim optipng pngquant gifsicle \
-    libonig-dev \
-    libxml2-dev \
-    && docker-php-ext-install pdo pdo_mysql mbstring fileinfo xml \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-RUN docker-php-ext-install pdo_mysql zip exif pcntl
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install gd
-RUN pecl install mongodb && docker-php-ext-enable mongodb
+    git unzip zip libzip-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
+    && docker-php-ext-install pdo pdo_mysql zip gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-RUN id -u $user &>/dev/null || useradd -G www-data,root -u $uid -d /home/$user $user
-
-RUN mkdir -p /home/$user/.composer && \
-    chown -R $user:$user /home/$user
 
 WORKDIR /var/www/html
 
 COPY . .
 
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader \
+    && chmod -R 775 storage bootstrap/cache
 
+EXPOSE 8000
 
-EXPOSE 80
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
 
-RUN chmod -R 775 storage bootstrap/cache
-
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
 
 
 
