@@ -1,6 +1,5 @@
 # Usamos una imagen pre-configurada para producción que incluye PHP, Nginx y Supervisor
-FROM thecodingmachine/php:8.2-v4-nginx-node20
-
+FROM thecodingmachine/php:8.2-v4-nginx
 # Habilita las extensiones de PHP que necesitamos
 RUN docker-php-ext-enable zip exif pcntl gd
 
