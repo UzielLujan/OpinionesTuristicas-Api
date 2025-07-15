@@ -1,7 +1,7 @@
 FROM php:8.2-fpm
 
-ARG user
-ARG uid
+ARG user=www-data
+ARG uid=1000
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -24,6 +24,7 @@ RUN pecl install mongodb && docker-php-ext-enable mongodb
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
+
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
