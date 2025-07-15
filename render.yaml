@@ -5,8 +5,8 @@ services:
     env: docker
     dockerfilePath: ./docker/Dockerfile  
     healthCheckPath: /api/health
-    ports:
-      - 80 # ¡Aquí está la clave!
+    http:
+      port: 8000
     envVars:
       - key: APP_URL
         value: https://${RENDER_EXTERNAL_URL}
