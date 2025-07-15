@@ -3,10 +3,10 @@ services:
     name: opiniones-turisticas-api
     plan: free
     env: docker
-    dockerfilePath: ./docker/Dockerfile  # ✅ Ruta corregida
-    healthCheckPath: /api/health          # Puedes desactivarlo si no tienes esa ruta
-    http:
-      port: 8000                          # ✅ Este puerto debe coincidir con el que expone tu Dockerfile
+    dockerfilePath: ./docker/Dockerfile  
+    healthCheckPath: /api/health
+    ports:
+      - 80 # ¡Aquí está la clave!
     envVars:
       - key: APP_URL
         value: https://${RENDER_EXTERNAL_URL}
@@ -15,4 +15,5 @@ services:
       - key: DB_CONNECTION
         value: mongodb
       - key: DB_URI
-        sync: false  # ⚠️ Recuerda configurarlo manualmente en el dashboard de Render
+        sync: false
+
