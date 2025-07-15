@@ -4,6 +4,15 @@ Este proyecto es un backend construido con Laravel que proporciona una API RESTf
 Este proyecto está inspirado en el corpus REST-MEX, esta aplicación simula el proceso de construcción de datasets de texto para modelos de Procesamiento de Lenguaje Natural (NLP) de análisis de sentimiento, implementada con Laravel, MongoDB Atlas y Docker.
 El proyecto está completamente contenedorizado con Docker para un fácil despliegue y portabilidad.
 
+## Vista de la interfaz visual (CRUD)
+
+Puedes ver una demo estática de la interfaz del sistema para demostración (no conectada a la base de datos real) en el siguiente enlace:
+
+[![Ver Demo en Vivo](https://img.shields.io/badge/Ver_Demo-Live-brightgreen?style=for-the-badge&logo=github)](https://uziellujan.github.io/OpinionesTuristicas-Api/)
+
+> *Nota:* La funcionalidad dinámica requiere backend y base de datos, pero esta vista te permite conocer el diseño del sistema sin levantar el entorno completo.
+---
+
 ## Características Principales
 
 -   Backend moderno y modular con **Laravel 12**.
