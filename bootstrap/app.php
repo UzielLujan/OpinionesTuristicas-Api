@@ -1,5 +1,7 @@
 <?php
 
+error_log(print_r($_ENV, true));
+
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
