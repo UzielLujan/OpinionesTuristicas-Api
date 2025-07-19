@@ -10,6 +10,7 @@ services:
       php artisan migrate --force
       php artisan config:cache
       php artisan view:cache
+      chown -R www:www storage bootstrap/cache
     healthCheckPath: /api/health
     http:
       port: 80
