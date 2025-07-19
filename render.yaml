@@ -7,6 +7,7 @@ services:
     buildCommand: |-
       npm install
       npm run build
+      php artisan migrate --force
     healthCheckPath: /api/health
     http:
       port: 8000
