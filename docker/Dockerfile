@@ -50,6 +50,7 @@ RUN groupadd -g 1000 www && \
 # Copiar archivos de configuración de Nginx y PHP
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/php.ini /usr/local/etc/php/conf.d/app.ini
+COPY docker/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Copiar las extensiones de PHP ya compiladas y sus archivos de configuración desde la etapa builder
 COPY --from=builder /usr/local/lib/php/extensions/no-debug-non-zts-20220829/ /usr/local/lib/php/extensions/no-debug-non-zts-20220829/
