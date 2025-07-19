@@ -59,6 +59,9 @@ COPY --from=builder /app .
 # Asignar propiedad de los archivos al usuario www
 RUN chown -R www:www /var/www
 
+# Establecer permisos de escritura para Laravel
+RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
 EXPOSE 80
 
 CMD ["/bin/sh", "-c", "php-fpm & nginx -g 'daemon off;'"]
