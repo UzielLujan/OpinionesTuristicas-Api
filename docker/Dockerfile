@@ -59,7 +59,7 @@ COPY --from=builder /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 WORKDIR /var/www
 
 # Copiar el código de la aplicación y las dependencias desde la etapa builder
-COPY --from=builder /app .
+COPY --from=builder /var/www .
 
 # Asignar propiedad de los archivos al usuario www
 RUN chown -R www:www /var/www
