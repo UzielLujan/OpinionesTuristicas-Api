@@ -1,44 +1,35 @@
-FROM php:8.2
-
-# Instala extensiones necesarias
-RUN apt-get update && apt-get install -y \
-    git unzip zip libzip-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
-    && pecl install mongodb \
-    && docker-php-ext-enable mongodb \
-    && docker-php-ext-install pdo pdo_mysql zip gd
-
-# Copia Composer desde imagen oficial
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Establece el directorio de trabajo
-WORKDIR /var/www/html
-
-# Copia solo los archivos de Composer para aprovechar la cache
-COPY composer.json composer.lock ./
-
-# Instala dependencias sin que falle por falta de artisan
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader || true
-
-# Copia el resto del código fuente (incluye artisan, rutas, etc.)
+# Etapa 1: Builder - Instalar dependencias
+FROM composer:2.5 as builder
+WORKDIR /app
 COPY . .
+RUN composer install --no-dev --no-interaction --optimize-autoloader
 
-# Reinstala composer (ahora con artisan presente)
-RUN composer dump-autoload --optimize && composer install --no-interaction --prefer-dist --optimize-autoloader
+# Etapa 2: Final - Configurar el entorno de producción
+FROM php:8.2-fpm-alpine
 
-# Ajusta permisos para Laravel
-RUN chmod -R 775 storage bootstrap/cache
+# Instalar extensiones de PHP necesarias
+RUN apk add --no-cache nginx shadow && \
+    docker-php-ext-install pdo pdo_mysql && \
+    pecl install mongodb && \
+    docker-php-ext-enable mongodb
 
-# Expone el puerto del servidor embebido
-EXPOSE 8000
+# Crear usuario y grupo no-root para la aplicación
+RUN groupadd -g 1000 www && \
+    useradd -u 1000 -ms /bin/sh -g www www
 
-# Comando para iniciar Laravel en modo dev
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+# Copiar archivos de configuración de Nginx y PHP
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/php.ini /usr/local/etc/php/conf.d/app.ini
 
+# Copiar el código de la aplicación desde la etapa de builder
+COPY --from=builder /app /var/www
+WORKDIR /var/www
 
+# Asignar propiedad de los archivos al usuario www
+RUN chown -R www:www /var/www
 
+# Exponer el puerto 80 para Nginx
+EXPOSE 80
 
-
-
-
-
-
+# Iniciar PHP-FPM y Nginx
+CMD ["/bin/sh", "-c", "php-fpm & nginx -g 'daemon off;'"]
