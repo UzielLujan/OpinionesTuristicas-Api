@@ -3,7 +3,10 @@ services:
     name: opiniones-turisticas-api
     plan: free
     env: docker
-    dockerfilePath: ./docker/Dockerfile  
+    dockerfilePath: ./docker/Dockerfile
+    buildCommand: |-
+      npm install
+      npm run build
     healthCheckPath: /api/health
     http:
       port: 8000
