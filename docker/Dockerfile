@@ -25,7 +25,7 @@ RUN docker-php-ext-install pdo pdo_mysql zip gd
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /app
+WORKDIR /var/www
 
 # Copiar TODO el código de la aplicación primero
 COPY . .
