@@ -33,6 +33,10 @@ COPY . .
 # AHORA ejecutar composer install, con el archivo 'artisan' ya presente
 RUN composer install --no-dev --no-interaction --optimize-autoloader
 
+# Generar caché de configuración y rutas para producción
+RUN php artisan config:cache
+RUN php artisan route:cache
+
 # Etapa 2: Final - Imagen de producción limpia
 FROM php:8.2-fpm-alpine
 
