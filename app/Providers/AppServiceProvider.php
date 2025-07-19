@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        try {
+            \DB::connection()->getPdo();
+            \Log::info('Database connection successful!');
+        } catch (\Exception $e) {
+            \Log::error('Database connection failed: ' . $e->getMessage());
+        }
     }
 }
