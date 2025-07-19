@@ -27,12 +27,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
-# Instalar dependencias de Composer
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --optimize-autoloader
-
-# Copiar el resto del código de la aplicación
+# Copiar TODO el código de la aplicación primero
 COPY . .
+
+# AHORA ejecutar composer install, con el archivo 'artisan' ya presente
+RUN composer install --no-dev --no-interaction --optimize-autoloader
 
 # Etapa 2: Final - Imagen de producción limpia
 FROM php:8.2-fpm-alpine
