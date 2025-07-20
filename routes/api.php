@@ -23,7 +23,9 @@ Route::apiResource('opinions', OpinionController::class);
 
 // Ruta raíz para verificar que la API está funcionando
 Route::get('/', function () {
-    return response()->json(['message' => 'API is working!']);
+    header('Content-Type: application/json');
+    echo json_encode(['message' => 'API is working (raw)! ']);
+    exit;
 });
 
 // Ruta para el Health Check de Render
