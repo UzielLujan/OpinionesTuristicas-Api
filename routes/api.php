@@ -19,9 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('opinions/export', [OpinionController::class, 'export']);
 
 // Crea automáticamente las rutas CRUD para nuestras opiniones
-Route::get('/', function () {
-    return response()->json(['message' => 'API is working!']);
-});
+Route::apiResource('opinions', OpinionController::class);
 
 // Ruta para el Health Check de Render
 Route::get('/health', function () {
