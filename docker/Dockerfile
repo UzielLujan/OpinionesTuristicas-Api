@@ -30,8 +30,9 @@ WORKDIR /var/www
 # Copiar TODO el código de la aplicación primero
 COPY . .
 
-# AHORA ejecutar composer install, con el archivo 'artisan' ya presente
-RUN composer install --no-dev --no-interaction --optimize-autoloader
+# Actualizar composer.lock y luego instalar dependencias
+RUN composer update --no-dev --no-interaction && \
+    composer install --no-dev --no-interaction --optimize-autoloader
 
 # Etapa 2: Final - Imagen de producción limpia
 FROM php:8.2-fpm-alpine
