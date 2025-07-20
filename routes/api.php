@@ -21,6 +21,11 @@ Route::get('opinions/export', [OpinionController::class, 'export']);
 // Crea automáticamente las rutas CRUD para nuestras opiniones
 Route::apiResource('opinions', OpinionController::class);
 
+// Ruta raíz para verificar que la API está funcionando
+Route::get('/', function () {
+    return response()->json(['message' => 'API is working!']);
+});
+
 // Ruta para el Health Check de Render
 Route::get('/health', function () {
     return response()->json([
