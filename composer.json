@@ -60,9 +60,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-                "jenssegers/laravel-mongodb"
-            ]
+            "dont-discover": []
         }
     },
     "config": {
