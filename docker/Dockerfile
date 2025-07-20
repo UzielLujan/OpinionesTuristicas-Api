@@ -56,7 +56,7 @@ RUN chown -R www-data:www-data /var/www
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # Crear directorio para el socket FPM y establecer permisos
-RUN mkdir -p /var/www/run && chown www-data:www-data /var/www/run
+RUN mkdir -p /var/www/run && chown www-data:www-data /var/www/run && chmod 777 /var/www/run
 
 EXPOSE 80
 
