@@ -1,5 +1,5 @@
 # Etapa 1: Builder - Compilar todo
-FROM php:8.2-cli-buster AS builder
+FROM php:8.2-cli-bullseye AS builder
 
 # Instalar dependencias del sistema para compilar
 RUN apt-get update && apt-get install -y \
@@ -36,7 +36,7 @@ RUN composer update --no-dev --no-interaction && \
     composer install --no-dev --no-interaction --optimize-autoloader
 
 # Etapa 2: Final - Imagen de producción limpia
-FROM php:8.2-fpm-buster
+FROM php:8.2-fpm-bullseye
 
 # Instalar solo las librerías de sistema necesarias en tiempo de ejecución
 RUN apt-get update && apt-get install -y nginx shadow libzip libpng-dev libjpeg-dev libfreetype6-dev     && rm -rf /var/lib/apt/lists/*
