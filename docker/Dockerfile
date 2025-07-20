@@ -66,4 +66,4 @@ RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 80
 
-CMD ["php-fpm", "-F", "--pid", "/var/run/php-fpm.pid", "--fpm-config", "/usr/local/etc/php-fpm.d/www.conf"] && nginx -g 'daemon off;'
+CMD ["/bin/sh", "-c", "php-fpm & nginx -g 'daemon off;'"]
