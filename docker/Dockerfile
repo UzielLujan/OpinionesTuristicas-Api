@@ -64,6 +64,9 @@ RUN chown -R www:www /var/www
 # Establecer permisos de escritura para Laravel
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
+# Crear directorio para el socket FPM y establecer permisos
+RUN mkdir -p /var/www/run && chown www:www /var/www/run
+
 EXPOSE 80
 
 CMD ["/bin/sh", "-c", "php-fpm & nginx -g 'daemon off;'"]
