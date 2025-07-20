@@ -22,11 +22,15 @@ Route::get('opinions/export', [OpinionController::class, 'export']);
 Route::apiResource('opinions', OpinionController::class);
 
 // Ruta raíz para verificar que la API está funcionando
+Route::apiResource('opinions', OpinionController::class);
+
+// Ruta raíz para verificar que la API está funcionando
 Route::get('/', function () {
-    header('Content-Type: application/json');
-    echo json_encode(['message' => 'API is working (raw)! ']);
-    exit;
+    return response()->json(['message' => 'API is working!']);
 });
+
+// Ruta para el Health Check de Render
+Route::get('/health', function () {
 
 // Ruta para el Health Check de Render
 Route::get('/health', function () {
