@@ -33,8 +33,7 @@ FROM php:8.2-fpm-bullseye
 RUN apt-get update && apt-get install -y nginx libzip-dev libpng-dev libjpeg-dev libfreetype6-dev     && rm -rf /var/lib/apt/lists/*
 
 # Crear usuario y grupo no-root
-RUN groupadd -g 1000 www && \
-    useradd -u 1000 -ms /bin/sh -g www www
+RUN groupadd -g 1000 www-data &&     useradd -u 1000 -ms /bin/sh -g www-data www-data
 
 # Copiar archivos de configuración de Nginx y PHP
 COPY docker/nginx.conf /etc/nginx/nginx.conf
@@ -51,13 +50,13 @@ WORKDIR /var/www
 COPY --from=builder /var/www .
 
 # Asignar propiedad de los archivos al usuario www
-RUN chown -R www:www /var/www
+RUN chown -R www-data:www-data /var/www
 
 # Establecer permisos de escritura para Laravel
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # Crear directorio para el socket FPM y establecer permisos
-RUN mkdir -p /var/www/run && chown www:www /var/www/run
+RUN mkdir -p /var/www/run && chown www-data:www-data /var/www/run
 
 EXPOSE 80
 
