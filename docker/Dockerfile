@@ -3,16 +3,7 @@ FROM php:8.2-cli-bullseye AS builder
 
 # Instalar dependencias del sistema para compilar
 RUN apt-get update && apt-get install -y \
-    $PHPIZE_DEPS \
-    build-essential \
-    git \
-    unzip \
-    zip \
-    libzip-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    && rm -rf /var/lib/apt/lists/*
+    $PHPIZE_DEPS     build-essential     git     unzip     zip     libzip-dev     libpng-dev     libjpeg-dev     libfreetype6-dev     && rm -rf /var/lib/apt/lists/*
 
 # Instalar la extensión de MongoDB
 RUN pecl install mongodb && docker-php-ext-enable mongodb
@@ -39,7 +30,7 @@ RUN composer update --no-dev --no-interaction && \
 FROM php:8.2-fpm-bullseye
 
 # Instalar solo las librerías de sistema necesarias en tiempo de ejecución
-RUN apt-get update && apt-get install -y nginx shadow libzip libpng-dev libjpeg-dev libfreetype6-dev     && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y nginx libzip-dev libpng-dev libjpeg-dev libfreetype6-dev     && rm -rf /var/lib/apt/lists/*
 
 # Crear usuario y grupo no-root
 RUN groupadd -g 1000 www && \
