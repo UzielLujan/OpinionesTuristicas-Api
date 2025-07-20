@@ -1,17 +1,18 @@
 # Etapa 1: Builder - Compilar todo
-FROM php:8.2-cli-alpine AS builder
+FROM php:8.2-cli-buster AS builder
 
 # Instalar dependencias del sistema para compilar
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     $PHPIZE_DEPS \
-    build-base \
+    build-essential \
     git \
     unzip \
     zip \
     libzip-dev \
     libpng-dev \
-    jpeg-dev \
-    freetype-dev
+    libjpeg-dev \
+    libfreetype6-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Instalar la extensión de MongoDB
 RUN pecl install mongodb && docker-php-ext-enable mongodb
@@ -35,10 +36,10 @@ RUN composer update --no-dev --no-interaction && \
     composer install --no-dev --no-interaction --optimize-autoloader
 
 # Etapa 2: Final - Imagen de producción limpia
-FROM php:8.2-fpm-alpine
+FROM php:8.2-fpm-buster
 
 # Instalar solo las librerías de sistema necesarias en tiempo de ejecución
-RUN apk add --no-cache nginx shadow libzip libpng jpeg freetype
+RUN apt-get update && apt-get install -y nginx shadow libzip libpng-dev libjpeg-dev libfreetype6-dev     && rm -rf /var/lib/apt/lists/*
 
 # Crear usuario y grupo no-root
 RUN groupadd -g 1000 www && \
@@ -65,7 +66,7 @@ RUN chown -R www:www /var/www
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # Crear directorio para el socket FPM y establecer permisos
-RUN mkdir -p /var/www/run && chown www:www /var/www/run && chmod 777 /var/www/run
+RUN mkdir -p /var/www/run && chown www:www /var/www/run
 
 EXPOSE 80
 
