@@ -33,7 +33,7 @@ FROM php:8.2-fpm-bullseye
 RUN apt-get update && apt-get install -y nginx libzip-dev libpng-dev libjpeg-dev libfreetype6-dev     && rm -rf /var/lib/apt/lists/*
 
 # Crear usuario y grupo no-root
-RUN groupadd -g 1000 www-data &&     useradd -u 1000 -ms /bin/sh -g www-data www-data
+# Crear usuario y grupo no-root
 
 # Copiar archivos de configuración de Nginx y PHP
 COPY docker/nginx.conf /etc/nginx/nginx.conf
